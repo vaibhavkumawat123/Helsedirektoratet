@@ -1,7 +1,12 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { ContactShadows, useGLTF } from "@react-three/drei";
 import { useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+} from "framer-motion";
 
 function TableModel({ scrollYProgress }) {
   const { scene } = useGLTF("/models/table.glb");
@@ -74,9 +79,13 @@ function Hotspot({ x, y, label }) {
 function InfoCard({ x, y, title, text, onClose }) {
   return (
     <motion.div
-      initial={{ scale: 0.7, opacity: 0, y: 20 }}
+      initial={{ scale: 0.6, opacity: 0, y: 40 }}
       animate={{ scale: 1, opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, ease: "easeOut" }}
+      exit={{ scale: 0.6, opacity: 0, y: 20 }}
+      transition={{
+        duration: 0.45,
+        ease: [0.22, 1, 0.36, 1],
+      }}
       className="absolute w-[240px] bg-white/95 backdrop-blur p-4 rounded-lg shadow-xl"
       style={{
         left: x,
@@ -84,8 +93,6 @@ function InfoCard({ x, y, title, text, onClose }) {
         transform: "translate(-50%, -150%)",
       }}
     >
-      {/* CLOSE BUTTON */}
-
       <button
         onClick={onClose}
         className="absolute top-2 right-2 text-gray-400 hover:text-black text-sm"
@@ -184,45 +191,47 @@ export default function TableExperience() {
         </div>
         {/* INFO DIALOGS */}
 
-        {active === "cbd" && (
-          <InfoCard
-            x="50%"
-            y="43%"
-            title="CBD Oil"
-            text="CBD oil is extracted from cannabis plants and is used for medical and wellness purposes."
-            onClose={() => setActive(null)}
-          />
-        )}
+        <AnimatePresence mode="wait">
+  {active === "cbd" && (
+    <InfoCard
+      x="50%"
+      y="43%"
+      title="CBD Oil"
+      text="CBD oil is extracted from cannabis plants and is used for medical and wellness purposes."
+      onClose={() => setActive(null)}
+    />
+  )}
 
-        {active === "marijuana" && (
-          <InfoCard
-            x="60%"
-            y="45%"
-            title="Marijuana"
-            text="Marijuana refers to dried flowers of the cannabis plant that are commonly used recreationally."
-            onClose={() => setActive(null)}
-          />
-        )}
+  {active === "marijuana" && (
+    <InfoCard
+      x="60%"
+      y="45%"
+      title="Marijuana"
+      text="Marijuana refers to dried flowers of the cannabis plant that are commonly used recreationally."
+      onClose={() => setActive(null)}
+    />
+  )}
 
-        {active === "hash" && (
-          <InfoCard
-            x="51%"
-            y="58%"
-            title="Hash"
-            text="Hash is a concentrated form of cannabis made from resin collected from the plant."
-            onClose={() => setActive(null)}
-          />
-        )}
+  {active === "hash" && (
+    <InfoCard
+      x="51%"
+      y="58%"
+      title="Hash"
+      text="Hash is a concentrated form of cannabis made from resin collected from the plant."
+      onClose={() => setActive(null)}
+    />
+  )}
 
-        {active === "oil" && (
-          <InfoCard
-            x="38%"
-            y="43%"
-            title="Cannabis Oil"
-            text="Cannabis oil is a liquid extract used in various products including medical treatments."
-            onClose={() => setActive(null)}
-          />
-        )}
+  {active === "oil" && (
+    <InfoCard
+      x="38%"
+      y="43%"
+      title="Cannabis Oil"
+      text="Cannabis oil is a liquid extract used in various products including medical treatments."
+      onClose={() => setActive(null)}
+    />
+  )}
+</AnimatePresence>
       </div>
     </section>
   );
